@@ -32,14 +32,14 @@ jobs:
 
       - name: Build for Fedora 41
         run: |
-          copr-cli build-package your-username/whisper-openvino \
+          copr-cli build-package mecattaf/whisper-openvino \
             --nowait \
             --name whisper-openvino \
             --chroot fedora-41-x86_64
 
       - name: Build for Rawhide
         run: |
-          copr-cli build-package your-username/whisper-openvino \
+          copr-cli build-package mecattaf/whisper-openvino \
             --nowait \
             --name whisper-openvino \
             --chroot fedora-rawhide-x86_64
@@ -48,4 +48,4 @@ jobs:
         if: always()
         run: |
           sleep 30  # Give COPR time to register builds
-          copr-cli list-builds your-username/whisper-openvino
+          copr-cli list-builds mecattaf/whisper-openvino
