@@ -19,13 +19,13 @@ BuildRequires:  gcc-c++
 BuildRequires:  make
 
 # OpenVINO requirements
-BuildRequires:  openvino-runtime-devel
-BuildRequires:  openvino-runtime
+BuildRequires:  openvino
+BuildRequires:  openvino-devel
 
 # OpenBLAS for better performance
 BuildRequires:  openblas-devel
 
-Requires:       openvino-runtime
+Requires:       openvino
 Requires:       openblas
 
 # Conflicts with base whisper-cpp package
