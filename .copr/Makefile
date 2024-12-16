@@ -1,19 +1,37 @@
-.PHONY: srpm prepare
-
-BUILDDIR := $(shell pwd)
-SPECFILE := $(spec)
-
 prepare:
 	# Set up OpenVINO repository first
 	cat $(dir $(SPECFILE))/openvino-2024.repo > /etc/yum.repos.d/openvino.repo
 	chmod 644 /etc/yum.repos.d/openvino.repo
+	
+	# Debug: Show repo file
+	echo "=== OpenVINO repo file content ==="
+	cat /etc/yum.repos.d/openvino.repo
+	
+	# Debug: List all repo files
+	echo "=== All repo files ==="
+	ls -la /etc/yum.repos.d/
+	
+	# Import key
 	rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+	
+	# Debug: Check repo availability
+	echo "=== Testing repo access ==="
+	curl -v https://yum.repos.intel.com/openvino/2024/repodata/repomd.xml || true
 	
 	# Clean and refresh repository metadata
 	dnf5 clean all
 	dnf5 makecache --refresh
 	
-	# List available OpenVINO packages (don't fail if not found)
+	# Debug: Show all enabled repos
+	echo "=== Enabled repositories ==="
+	dnf5 repolist enabled
+	
+	# Debug: Show all repos including disabled
+	echo "=== All repositories ==="
+	dnf5 repolist all
+	
+	# List available OpenVINO packages
+	echo "=== OpenVINO packages ==="
 	dnf5 list 'openvino*' || true
 	
 	# Install build requirements
