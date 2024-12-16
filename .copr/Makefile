@@ -4,12 +4,12 @@ BUILDDIR := $(shell pwd)
 SPECFILE := $(spec)
 
 prepare:
-	# First install dnf plugins and basic build tools
-	dnf5 install --nodocs -y 'dnf5-command(config-manager)' rpm-build rpmdevtools
-	# Copy and enable OpenVINO repo
+	# First install basic build tools
+	dnf5 install --nodocs -y rpm-build rpmdevtools dnf5-plugins-core
+	# Copy OpenVINO repo and import key
 	cp $(dir $(SPECFILE))/openvino-2024.repo /etc/yum.repos.d/
-	# Instead of config-manager, we'll just use the copied repo directly and refresh
-	# Update repo metadata 
+	rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+	# Update metadata
 	dnf5 makecache
 	# Now install build dependencies
 	dnf5 install --nodocs -y \
