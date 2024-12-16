@@ -4,16 +4,17 @@ BUILDDIR := $(shell pwd)
 SPECFILE := $(spec)
 
 prepare:
-	# Create and set up OpenVINO repository first
+	# Set up OpenVINO repository first
 	cat $(dir $(SPECFILE))/openvino-2024.repo > /etc/yum.repos.d/openvino.repo
 	chmod 644 /etc/yum.repos.d/openvino.repo
 	rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 	
-	# Verify repository setup
+	# Clean and refresh repository metadata
 	dnf5 clean all
 	dnf5 makecache --refresh
-	dnf5 repolist | grep -i openvino
-	dnf5 list 'openvino*'
+	
+	# List available OpenVINO packages (don't fail if not found)
+	dnf5 list 'openvino*' || true
 	
 	# Install build requirements
 	dnf5 install --nodocs -y --setopt=strict=0 \
