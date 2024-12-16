@@ -50,10 +50,6 @@ Development files for %{name}, including headers and libraries needed
 to build applications using whisper-cpp with OpenVINO support.
 
 %prep
-# Setup Intel OpenVINO repository
-mkdir -p %{buildroot}%{_sysconfdir}/yum.repos.d
-install -pm 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/yum.repos.d/
-
 %autosetup -p1 -n whisper.cpp-%{version}
 
 # Version the ggml *.so
@@ -83,7 +79,6 @@ sed -i -e 's@POSITION_INDEPENDENT_CODE ON@POSITION_INDEPENDENT_CODE ON SOVERSION
 
 %files
 %license LICENSE
-%{_sysconfdir}/yum.repos.d/openvino-2024.repo
 %{_libdir}/libggml.so.*
 %{_libdir}/libwhisper.so.*
 

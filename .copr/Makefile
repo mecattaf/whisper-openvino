@@ -4,19 +4,24 @@ BUILDDIR := $(shell pwd)
 SPECFILE := $(spec)
 
 prepare:
+	# Create and set up OpenVINO repository first
+	cat $(dir $(SPECFILE))/openvino-2024.repo > /etc/yum.repos.d/openvino.repo
+	chmod 644 /etc/yum.repos.d/openvino.repo
+	rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+	
+	# Verify repository setup
+	dnf5 clean all
+	dnf5 makecache --refresh
+	dnf5 repolist | grep -i openvino
+	dnf5 list 'openvino*'
+	
 	# Install build requirements
 	dnf5 install --nodocs -y --setopt=strict=0 \
 		cmake clang gcc-c++ make \
 		rpmdevtools \
-		openblas-devel
-	# Set up OpenVINO repository 
-	cat $(dir $(SPECFILE))/openvino-2024.repo > /etc/yum.repos.d/openvino.repo
-	chmod 644 /etc/yum.repos.d/openvino.repo
-	rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-	dnf5 clean all
-	dnf5 makecache --refresh
-	# Install OpenVINO
-	dnf5 install --nodocs -y --setopt=strict=0 openvino
+		openblas-devel \
+		openvino-devel \
+		openvino
 
 srpm: prepare
 	cd $(dir $(SPECFILE)) && spectool -g $(notdir $(SPECFILE))
