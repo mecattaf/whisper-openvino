@@ -18,14 +18,14 @@ BuildRequires:  clang
 BuildRequires:  gcc-c++
 BuildRequires:  make
 
-# OpenVINO requirements
-BuildRequires:  openvino
-BuildRequires:  openvino-devel
+# OpenVINO requirements 
+BuildRequires:  openvino >= 2024.5.0
+BuildRequires:  openvino-devel >= 2024.5.0
 
 # OpenBLAS for better performance
 BuildRequires:  openblas-devel
 
-Requires:       openvino
+Requires:       openvino >= 2024.5.0
 Requires:       openblas
 
 # Conflicts with base whisper-cpp package
