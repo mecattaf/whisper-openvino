@@ -4,18 +4,16 @@ BUILDDIR := $(shell pwd)
 SPECFILE := $(spec)
 
 prepare:
-	# First install basic build tools
-	dnf5 install --nodocs -y rpm-build rpmdevtools dnf5-plugins-core
+	# First install basic build tools (skip ones that are already installed)
+	dnf5 install --nodocs -y --setopt=strict=0 rpmdevtools \
+		cmake clang gcc-c++ make \
+		openblas-devel
 	# Copy OpenVINO repo and import key
 	cp $(dir $(SPECFILE))/openvino-2024.repo /etc/yum.repos.d/
 	rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-	# Update metadata
+	# Update metadata and install OpenVINO
 	dnf5 makecache
-	# Now install build dependencies
-	dnf5 install --nodocs -y \
-		cmake clang gcc-c++ make \
-		openvino \
-		openblas-devel
+	dnf5 install --nodocs -y openvino
 
 srpm: prepare
 	cd $(dir $(SPECFILE)) && spectool -g $(notdir $(SPECFILE))
